@@ -4,6 +4,7 @@ from optimize import create_indexes
 from quality_check import quality_check
 from versioning import archive_version
 from metadata import update_metadata
+from caching import build_cache
 
 print("Starting ETL pipeline")
 
@@ -24,5 +25,8 @@ archive_version()
 
 # refresh the metadata table (structure, sources, lineage)
 update_metadata()
+
+# rebuild cached summary tables for frequent queries
+build_cache()
 
 print("ETL pipeline finished")

@@ -28,7 +28,7 @@ box. In a real production project, data files would live outside git
 reviewer can run everything without downloading anything.
 
 ## Project structure
-
+'
     Nesma_2/
     ├── data/
     │   ├── raw/                  original dataset, never modified
@@ -43,13 +43,14 @@ reviewer can run everything without downloading anything.
     │   ├── quality_check.py      data quality checks
     │   ├── versioning.py         dataset snapshots
     │   ├── metadata.py           metadata table refresh
+    │   ├── caching.py            cached summary tables for frequent queries
     │   └── etl_pipeline.py       runs all pipeline steps in order
     ├── docs/
     │   ├── scheduling.md         how the pipeline is scheduled with cron
     │   └── quality_log.txt       history of quality check runs
     ├── requirements.txt
     └── README.md
-
+    '
 explore.py and performance_test.py are tools a human runs once to
 investigate and to measure. The other scripts are the pipeline itself.
 
@@ -91,7 +92,7 @@ file in data/processed/.
 The clean data is loaded into SQLite (retail.db) as a star schema:
 two dimension tables that describe things, and one fact table that
 records events.
-'
+
     dim_customers                dim_products
     ├── customer_id (PK)         ├── stock_code (PK)
     └── country                  ├── description
@@ -104,7 +105,7 @@ records events.
                 ├── stock_code (FK)
                 ├── quantity
                 └── unit_price
-'
+
 Loaded counts: 4,338 customers, 3,665 products, 392,692 sales rows.
 
 unit_price appears in both dim_products and fact_sales on purpose.
@@ -116,7 +117,7 @@ sales history stays correct.
 
 One command runs the whole chain:
 
-    clean -> ingest -> indexes -> quality check -> archive -> metadata
+    clean -> ingest -> indexes -> quality check -> archive -> metadata -> cache
 
 Each step prints a receipt with row counts, so every run can be
 audited. Scheduling is documented in docs/scheduling.md (cron, daily
@@ -139,6 +140,29 @@ That is roughly a 335x speedup from one index.
 SQLite does not support table partitioning. In production (for
 example PostgreSQL) fact_sales would be partitioned by month on
 invoice_date. The index on invoice_date serves that purpose here.
+
+## Caching
+
+Some questions get asked constantly, like sales by country or revenue
+per month. Answering them directly means scanning and aggregating all
+392,692 fact rows every time, even though the answer only changes when
+new data is loaded.
+
+caching.py precomputes these answers once per pipeline run and stores
+them as small summary tables:
+
+    cache_sales_by_country    one row per country (sales, items, revenue)
+    cache_sales_by_month      one row per month (sales, items, revenue)
+
+A dashboard reads a table of a few dozen rows instead of aggregating
+392k. The cache is rebuilt at the end of every pipeline run, so it can
+never go stale: the underlying data only changes when the pipeline
+runs. This is the same idea as a materialized view in a production
+warehouse.
+
+The trade-off of any cache is freshness against speed. Here the
+refresh is tied to the load, which removes the staleness problem
+entirely.
 
 ## Data quality monitoring
 
