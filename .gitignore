@@ -1,0 +1,4 @@
+venv/
+retail.db
+data/archive/
+.DS_Store

@@ -1,0 +1,30 @@
+
+--- Quality check run at 2026-07-02 11:55:40.659708 ---
+Rows in fact_sales: 392692
+Missing customer_id in fact_sales: Pass
+Missing stock_code in fact_sales: Pass
+Quantity zero or negative: Pass
+Price zero or negative: Pass
+Sales linked to unknown customer: Pass
+Sales linked to unknown product: Pass
+Duplicate customers in dim_customers: Pass
+
+--- Quality check run at 2026-07-02 12:14:22.410954 ---
+Rows in fact_sales: 392692
+Missing customer_id in fact_sales: Pass
+Missing stock_code in fact_sales: Pass
+Quantity zero or negative: Pass
+Price zero or negative: Pass
+Sales linked to unknown customer: Pass
+Sales linked to unknown product: Pass
+Duplicate customers in dim_customers: Pass
+
+--- Quality check run at 2026-07-02 12:32:26.789563 ---
+Rows in fact_sales: 392692
+Missing customer_id in fact_sales: Pass
+Missing stock_code in fact_sales: Pass
+Quantity zero or negative: Pass
+Price zero or negative: Pass
+Sales linked to unknown customer: Pass
+Sales linked to unknown product: Pass
+Duplicate customers in dim_customers: Pass
