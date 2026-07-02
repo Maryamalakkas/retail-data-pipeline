@@ -91,7 +91,7 @@ file in data/processed/.
 The clean data is loaded into SQLite (retail.db) as a star schema:
 two dimension tables that describe things, and one fact table that
 records events.
-'
+
     dim_customers                dim_products
     ├── customer_id (PK)         ├── stock_code (PK)
     └── country                  ├── description
@@ -104,7 +104,7 @@ records events.
                 ├── stock_code (FK)
                 ├── quantity
                 └── unit_price
-'
+
 Loaded counts: 4,338 customers, 3,665 products, 392,692 sales rows.
 
 unit_price appears in both dim_products and fact_sales on purpose.
