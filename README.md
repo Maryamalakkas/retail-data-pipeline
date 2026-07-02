@@ -29,6 +29,7 @@ reviewer can run everything without downloading anything.
 
 ## Project structure
 '
+
     Nesma_2/
     ├── data/
     │   ├── raw/                  original dataset, never modified
@@ -50,6 +51,7 @@ reviewer can run everything without downloading anything.
     │   └── quality_log.txt       history of quality check runs
     ├── requirements.txt
     └── README.md
+
 '
 explore.py and performance_test.py are tools a human runs once to
 investigate and to measure. The other scripts are the pipeline itself.
